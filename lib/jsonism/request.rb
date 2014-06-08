@@ -18,10 +18,24 @@ module Jsonism
 
     # Sends HTTP request
     def call
-      @client.connection.send(method, path)
+      if has_valid_params?
+        @client.connection.send(method, path)
+      else
+        raise MissingParams, missing_params
+      end
     end
 
     private
+
+    # @return [true, false] False if any keys in path template are missing
+    def has_valid_params?
+      missing_params.empty?
+    end
+
+    # @return [Array<Stirng>] Missing parameter names
+    def missing_params
+      @missing_params ||= path_keys - @params.keys
+    end
 
     # @return [String] Method name to call connection's methods
     # @example
@@ -47,9 +61,9 @@ module Jsonism
       end
     end
 
-    # @return [Array<String>]
+    # @return [Array<String>] Parameter names required for path
     # @exmaple
-    #   path_keys #=> [:id]
+    #   path_keys #=> ["id"]
     def path_keys
       @link.href.scan(/{(.+)}/).map do |str|
         CGI.unescape($1).gsub(/[()]/, "").split("/").last
@@ -68,6 +82,16 @@ module Jsonism
     #   request_params #=> { name: "example" }
     def request_params
       @params.except(*path_keys)
+    end
+
+    class MissingParams < Error
+      def initialize(missing_params)
+        @missing_params = missing_params
+      end
+
+      def to_s
+        @missing_params.join(", ") + " params are missing"
+      end
     end
   end
 end

@@ -8,6 +8,7 @@ require "faraday_middleware"
 require "json"
 require "json_schema"
 
+require "jsonism/error"
 require "jsonism/client"
 require "jsonism/definer"
 require "jsonism/link"

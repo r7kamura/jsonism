@@ -38,7 +38,7 @@ module Jsonism
       end
     end
 
-    class BaseUrlNotFound < StandardError
+    class BaseUrlNotFound < Error
     end
   end
 end

@@ -23,3 +23,14 @@ app.save
 # DELETE /apps/:id
 app.delete
 ```
+
+## Errors
+```
+StandardError
+|
+`---Jsonism::Error
+    |
+    |---Jsonism::Client::BaseUrlNotFound
+    |
+    `---Jsonism::Request::MissingParams
+```

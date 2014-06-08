@@ -49,12 +49,28 @@ describe Jsonism::Client do
 
   describe "#info_app" do
     subject do
-      instance.info_app(id: 1)
+      instance.info_app(params)
     end
 
-    it "sends HTTP request to GET /apps/:id" do
-      instance.connection.should_receive(:get).with("/apps/1")
-      subject
+    let(:params) do
+      { id: 1 }
+    end
+
+    context "with valid condition" do
+      it "sends HTTP request to GET /apps/:id" do
+        instance.connection.should_receive(:get).with("/apps/1")
+        subject
+      end
+    end
+
+    context "with missing params" do
+      before do
+        params.delete(:id)
+      end
+
+      it "raises Jsonism::Request::MissingParams" do
+        expect { subject }.to raise_error(Jsonism::Request::MissingParams, "id params are missing")
+      end
     end
   end
 end
