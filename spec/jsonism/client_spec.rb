@@ -109,7 +109,7 @@ describe Jsonism::Client do
     end
 
     context "with valid condition" do
-      it "sends HTTP request to GET /apps/:id" do
+      it "sends HTTP request to DELETE /apps/:id" do
         instance.connection.should_receive(:delete).with("/apps/1")
         instance.delete_app(params)
       end
@@ -119,6 +119,27 @@ describe Jsonism::Client do
       it "can be called from app.delete too" do
         instance.connection.should_receive(:delete).with("/apps/#{resource.id}")
         resource.delete
+      end
+    end
+  end
+
+  describe "#update_app" do
+    let(:resource) do
+      instance.info_app(params).body
+    end
+
+    context "with valid condition" do
+      it "sends HTTP request to PATCH /apps/:id" do
+        instance.connection.should_receive(:patch).with("/apps/1")
+        instance.update_app(params)
+      end
+    end
+
+    context "via app.update" do
+      it "can be called from app.update too" do
+        instance.connection.should_receive(:patch).with("/apps/#{resource.id}")
+        resource.name = "bravo"
+        resource.update
       end
     end
   end

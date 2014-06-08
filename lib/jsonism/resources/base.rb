@@ -2,7 +2,13 @@ module Jsonism
   module Resources
     class Base
       class << self
-        attr_accessor :schema
+        def read_only_property(name)
+          read_only_properties << name
+        end
+
+        def read_only_properties
+          @read_only_properties ||= []
+        end
       end
 
       # @param client [Jsonism::Client]
@@ -36,6 +42,10 @@ module Jsonism
 
       def previously_changed_properties
         @previously_changed_properties ||= {}
+      end
+
+      def read_only_properties
+        to_hash.slice(*self.class.read_only_properties)
       end
     end
   end

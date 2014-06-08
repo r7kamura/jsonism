@@ -46,7 +46,9 @@ module Jsonism
                   @properties[name]
                 end
 
-                unless schema.read_only
+                if schema.read_only
+                  read_only_property name
+                else
                   define_method("#{name}=") do |value|
                     change(name, value) if @properties[name] != value
                   end
@@ -57,6 +59,11 @@ module Jsonism
                 if link.rel == "delete"
                   include Resources::Deletable
                   self.link_for_deletion = Link.new(link: link)
+                end
+
+                if link.rel == "update"
+                  include Resources::Updatable
+                  self.link_for_update = Link.new(link: link)
                 end
               end
             end
