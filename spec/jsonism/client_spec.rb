@@ -21,5 +21,14 @@ describe Jsonism::Client do
     it "creates a new Jsonism::Client from given JSON Schema" do
       should be_a described_class
     end
+
+    it "defines some methods from links property" do
+      should be_respond_to :create_app
+      should be_respond_to :delete_app
+      should be_respond_to :info_app
+      should be_respond_to :list_app
+      should be_respond_to :list_recipe
+      should be_respond_to :update_app
+    end
   end
 end
