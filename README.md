@@ -9,19 +9,25 @@ schema = JSON.parse(body)
 
 # Create an HTTP client from JSON Schema which is a Hash object
 client = Jsonism::Client.new(schema: schema)
+client.methods(false) #=> [:create_app, :delete_app, :info_app, :list_app, :update_app, :list_recipe]
 
 # GET /apps
 client.list_app
 
+# GET /apps/1
+client.info_app(id: 1)
+
 # POST /apps
-app = client.create_app(name: "alpha")
-app.name = "bravo"
+client.create_app(name: "alpha")
 
-# PUT /apps/:id
-app.save
+# PUT /apps/1
+client.update_app(id: 1, name: "bravo")
 
-# DELETE /apps/:id
-app.delete
+# DELETE /apps/1
+client.delete_app(id: 1)
+
+# GET /recipes
+client.list_recipe
 ```
 
 ## Errors
