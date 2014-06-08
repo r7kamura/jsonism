@@ -50,11 +50,11 @@ client.list_app.body[0].to_hash #=> {"id"=>"01234567-89ab-cdef-0123-456789abcdef
 
 # Resource can respond to .delete method if a link with rel=delete is defined in schema
 # DELETE /apps/1
-client.info_app.body[0].body.delete
+client.list_app.body[0].body.delete
 
 # Resource can also respond to .update method in the same rule
 # PATCH /apps/1
-resource = client.info_app.body[0]
+resource = client.list_app.body[0]
 resource.name = "charlie"
 resource.update
 ```
