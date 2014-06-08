@@ -23,6 +23,9 @@ module Jsonism
 
     private
 
+    # @return [String] Method name to call connection's methods
+    # @example
+    #   method #=> "get"
     def method
       @link.method.downcase
     end
