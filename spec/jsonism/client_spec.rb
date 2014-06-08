@@ -29,6 +29,10 @@ describe Jsonism::Client do
     File.expand_path("../../fixtures/schema.json", __FILE__)
   end
 
+  let(:params) do
+    { id: 1 }
+  end
+
   describe ".new" do
     subject do
       instance
@@ -71,10 +75,6 @@ describe Jsonism::Client do
       instance.info_app(params)
     end
 
-    let(:params) do
-      { id: 1 }
-    end
-
     context "with valid condition" do
       it "sends HTTP request to GET /apps/:id" do
         instance.connection.should_receive(:get).with("/apps/1")
@@ -99,6 +99,26 @@ describe Jsonism::Client do
 
       it "raises Jsonism::Request::MissingParams" do
         expect { subject }.to raise_error(Jsonism::Request::MissingParams, "id params are missing")
+      end
+    end
+  end
+
+  describe "#delete_app" do
+    let(:resource) do
+      instance.info_app(params).body
+    end
+
+    context "with valid condition" do
+      it "sends HTTP request to GET /apps/:id" do
+        instance.connection.should_receive(:delete).with("/apps/1")
+        instance.delete_app(params)
+      end
+    end
+
+    context "via app.delete" do
+      it "can be called from app.delete too" do
+        instance.connection.should_receive(:delete).with("/apps/#{resource.id}")
+        resource.delete
       end
     end
   end

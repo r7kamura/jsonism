@@ -9,17 +9,20 @@ module Jsonism
     # @param headers [Hash]
     # @param link [Jsonism::Link]
     # @param params [Hash]
-    def initialize(client: nil, headers: {}, link: nil, params: {})
+    # @param options [Hash] Options to change the default behavior
+    def initialize(client: nil, headers: {}, link: nil, params: {}, **options)
       @client = client
       @headers = headers
       @link = link
       @params = params.with_indifferent_access
+      @options = options
     end
 
     # Sends HTTP request
     def call
       if has_valid_params?
         Response.new(
+          client: @client,
           resource_class: resource_class,
           response: @client.connection.send(method, path),
         )
@@ -100,7 +103,13 @@ module Jsonism
     # @example
     #   request_params #=> { name: "example" }
     def request_params
-      @params.except(*path_keys, *read_only_params)
+      unless configured_to_ignore_request_params?
+        @params.except(*path_keys, *read_only_params)
+      end
+    end
+
+    def configured_to_ignore_request_params?
+      p !!@options[:ignore_request_params]
     end
 
     class MissingParams < Error

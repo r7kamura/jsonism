@@ -38,7 +38,29 @@ module Jsonism
     def define_classes
       @schema.properties.each do |name, schema|
         unless Resources.const_defined?(name.camelize)
-          Resources.const_set(name.camelize, Class.new(Resources::Base))
+          Resources.const_set(
+            name.camelize,
+            Class.new(Resources::Base) do
+              schema.properties.each do |name, schema|
+                define_method(name) do
+                  @properties[name]
+                end
+
+                unless schema.read_only
+                  define_method("#{name}=") do |value|
+                    change(name, value) if @properties[name] != value
+                  end
+                end
+              end
+
+              schema.links.each do |link|
+                if link.rel == "delete"
+                  include Resources::Deletable
+                  self.link_for_deletion = Link.new(link: link)
+                end
+              end
+            end
+          )
         end
       end
     end

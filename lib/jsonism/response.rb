@@ -1,19 +1,21 @@
 module Jsonism
   class Response
+    # @param client [Jsonism::Client]
     # @param resource_class [Class]
     # @param response [Faraday::Response]
-    def initialize(resource_class: nil, response: nil)
+    def initialize(client: nil, resource_class: nil, response: nil)
+      @client = client
       @resource_class = resource_class
       @response = response
     end
 
     def body
       if has_list?
-        @response.body.map do |element|
-          @resource_class.new(element)
+        @response.body.map do |properties|
+          @resource_class.new(client: @client, properties: properties)
         end
       else
-        @resource_class.new(@response.body)
+        @resource_class.new(client: @client, properties: @response.body)
       end
     end
 

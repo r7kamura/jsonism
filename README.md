@@ -47,6 +47,10 @@ client.list_app.body[0].class.ancestors[1] #=> Jsonism::Resources::Base
 
 # Jsonism::Resources::Base has a method: .to_hash
 client.list_app.body[0].to_hash #=> {"id"=>"01234567-89ab-cdef-0123-456789abcdef", "name"=>"example"}
+
+# Resource can respond to .delete method if a link with rel=delete is defined in schema
+# DELETE /apps/1
+client.info_app.body[0].body.delete
 ```
 
 ## Errors

@@ -52,7 +52,7 @@
           "description": "Delete an existing app.",
           "href": "/apps/{(%23%2Fdefinitions%2Fapp%2Fdefinitions%2Fid)}",
           "method": "DELETE",
-          "rel": "destroy",
+          "rel": "delete",
           "title": "Delete"
         },
         {
