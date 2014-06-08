@@ -4,6 +4,7 @@ require "active_support/core_ext/hash/slice"
 require "active_support/core_ext/object/try"
 require "active_support/core_ext/string/inflections"
 require "faraday"
+require "faraday_middleware"
 require "json"
 require "json_schema"
 

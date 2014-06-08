@@ -9,7 +9,11 @@ module Jsonism
 
     # @return [Faraday::Connection]
     def connection
-      @connection ||= Faraday.new(url: base_url)
+      @connection ||= Faraday.new(url: base_url) do |connection|
+        connection.request :json
+        connection.response :json
+        connection.adapter :net_http
+      end
     end
 
     # @return [String] Base URL of API
