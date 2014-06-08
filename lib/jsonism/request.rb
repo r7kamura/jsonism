@@ -49,6 +49,13 @@ module Jsonism
       @missing_params ||= path_keys - @params.keys
     end
 
+    # @return [Array<String>] Parameter names marked as readonly
+    def read_only_params
+      @read_only_params ||= @link.schema.properties.map do |name, property|
+        name if property.read_only
+      end.compact
+    end
+
     # @return [String] Method name to call connection's methods
     # @example
     #   method #=> "get"
@@ -93,7 +100,7 @@ module Jsonism
     # @example
     #   request_params #=> { name: "example" }
     def request_params
-      @params.except(*path_keys)
+      @params.except(*path_keys, *read_only_params)
     end
 
     class MissingParams < Error
