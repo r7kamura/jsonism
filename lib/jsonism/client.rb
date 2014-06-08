@@ -6,6 +6,11 @@ module Jsonism
       define
     end
 
+    # @return [Faraday::Connection]
+    def connection
+      @connection ||= Faraday.new
+    end
+
     private
 
     # Defines some methods into itself from its JSON Schema

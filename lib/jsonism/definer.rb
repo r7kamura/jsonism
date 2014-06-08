@@ -21,11 +21,12 @@ module Jsonism
       @schema = ::JsonSchema.parse!(schema).tap(&:expand_references!)
     end
 
-    # Defines some methods into its client from its JSON schema
+    # Defines methods to call HTTP request from its JSON schema
     def call
+      client = @client
       links.each do |link|
-        @client.define_singleton_method(link.method_name) do |params = {}, headers = {}|
-          p [link.method_name, params, headers]
+        @client.define_singleton_method(link.method_signature) do |params = {}, headers = {}|
+          Request.call(client: client, headers: headers, link: link, params: params)
         end
       end
     end

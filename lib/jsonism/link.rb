@@ -5,8 +5,25 @@ module Jsonism
       @link = link
     end
 
-    def method_name
+    # @return [String]
+    # @example
+    #   method_signature #=> "list_app"
+    def method_signature
       link_title.underscore + "_" + schema_title.gsub(" ", "").underscore
+    end
+
+    # @return [String] Uppercase requet method
+    # @example
+    #   method #=> "GET"
+    def method
+      @link.method.to_s.upcase
+    end
+
+    # @return [Stirng]
+    # @example
+    #   href #=> "/apps"
+    def href
+      @link.href
     end
 
     private
