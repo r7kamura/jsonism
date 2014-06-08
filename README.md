@@ -28,6 +28,25 @@ client.delete_app(id: 1)
 
 # GET /recipes
 client.list_recipe
+
+# Each method returns a Jsonism::Response
+client.list_app.class #=> Jsonism::Response
+
+# Jsonism::Response has 3 methods: .status, .headers, .body
+client.list_app.status #=> 200
+client.list_app.headers["Content-Type"] #=> "application/json"
+client.list_app.body #=> [#<Jsonism::Resources::App:0x007f871ec96240>]
+
+# Jsonism::Response#body returns an instance of auto-defined class, or ones wrapped in Array
+# This class name is assigned from its title property on JSON Schema
+client.list_app.body[0].class #=> Jsonism::Resources::App
+client.info_app(id: 1).body.class #=> Jsonism::Resources::App
+
+# Auto-defined resource class inherits from Jsonism::Resources::Base
+client.list_app.body[0].class.ancestors[1] #=> Jsonism::Resources::Base
+
+# Jsonism::Resources::Base has a method: .to_hash
+client.list_app.body[0].to_hash #=> {"id"=>"01234567-89ab-cdef-0123-456789abcdef", "name"=>"example"}
 ```
 
 ## Errors

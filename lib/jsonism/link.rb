@@ -26,11 +26,11 @@ module Jsonism
       @link.href
     end
 
-    private
-
     def schema_title
       schema.title
     end
+
+    private
 
     def link_title
       @link.title

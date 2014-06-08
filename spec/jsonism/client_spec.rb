@@ -1,6 +1,18 @@
 require "spec_helper"
 
 describe Jsonism::Client do
+  before do
+    stub_request(:any, //).to_rack(mock_app)
+  end
+
+  let(:mock_app) do
+    local_schema = schema
+    Rack::Builder.new do
+      use Rack::JsonSchema::Mock, schema: local_schema
+      run ->(env) { [404, {}, ["Not Found"]] }
+    end
+  end
+
   let(:instance) do
     described_class.new(schema: schema)
   end
@@ -41,9 +53,16 @@ describe Jsonism::Client do
       instance.list_app
     end
 
-    it "sends HTTP request to GET /apps" do
-      instance.connection.should_receive(:get).with("/apps")
-      subject
+    context "with valid condition" do
+      it "sends HTTP request to GET /apps" do
+        instance.connection.should_receive(:get).with("/apps")
+        subject
+      end
+
+      it "returns an Array of resources" do
+        subject.body.should be_a Array
+        subject.body[0].should be_a Jsonism::Resources::App
+      end
     end
   end
 
@@ -60,6 +79,16 @@ describe Jsonism::Client do
       it "sends HTTP request to GET /apps/:id" do
         instance.connection.should_receive(:get).with("/apps/1")
         subject
+      end
+
+      it "returns a Jsonism::Response" do
+        should be_a Jsonism::Response
+      end
+
+      it "returns status, headers, and body data" do
+        subject.status.should == 200
+        subject.headers.should be_a Hash
+        subject.body.should be_a Jsonism::Resources::App
       end
     end
 

@@ -19,13 +19,25 @@ module Jsonism
     # Sends HTTP request
     def call
       if has_valid_params?
-        @client.connection.send(method, path)
+        Response.new(
+          resource_class: resource_class,
+          response: @client.connection.send(method, path),
+        )
       else
         raise MissingParams, missing_params
       end
     end
 
     private
+
+    # @return [Class] Auto-defined resource class
+    def resource_class
+      Resources.const_get(resource_class_name)
+    end
+
+    def resource_class_name
+      @link.schema_title.camelize
+    end
 
     # @return [true, false] False if any keys in path template are missing
     def has_valid_params?

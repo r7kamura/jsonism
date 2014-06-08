@@ -22,12 +22,8 @@ module Jsonism
 
     # Defines methods to call HTTP request from its JSON schema
     def call
-      client = @client
-      links.each do |link|
-        @client.define_singleton_method(link.method_signature) do |params = {}, headers = {}|
-          Request.call(client: client, headers: headers, link: link, params: params)
-        end
-      end
+      define_methods_into(@client)
+      define_classes
     end
 
     private
@@ -36,6 +32,26 @@ module Jsonism
     def links
       @links ||= self.class.extract_links(@schema).map do |link|
         Link.new(link: link)
+      end
+    end
+
+    def define_classes
+      @schema.properties.each do |name, schema|
+        unless Resources.const_defined?(name.camelize)
+          Resources.const_set(name.camelize, Class.new(Resources::Base))
+        end
+      end
+    end
+
+    # Defines methods into client
+    # @example
+    #   client.list_app
+    #   client.info_app(id: 1)
+    def define_methods_into(client)
+      links.each do |link|
+        @client.define_singleton_method(link.method_signature) do |params = {}, headers = {}|
+          Request.call(client: client, headers: headers, link: link, params: params)
+        end
       end
     end
   end

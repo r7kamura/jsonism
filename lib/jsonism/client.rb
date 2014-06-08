@@ -23,6 +23,13 @@ module Jsonism
       @base_url ||= root_link.try(:href) or raise BaseUrlNotFound
     end
 
+    # @return [Hash<String, Class>]
+    # @example
+    #   resource_classes #=> { "App" #=> #<Class> }
+    def resource_classes
+      @resource_classes ||= {}
+    end
+
     private
 
     # Defines some methods into itself from its JSON Schema
