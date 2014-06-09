@@ -30,14 +30,14 @@ module Jsonism
       schema.title
     end
 
+    def schema
+      @link.target_schema || @link.parent
+    end
+
     private
 
     def link_title
       @link.title
-    end
-
-    def schema
-      @link.target_schema || @link.parent
     end
   end
 end

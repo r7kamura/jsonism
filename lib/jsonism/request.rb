@@ -24,7 +24,7 @@ module Jsonism
         Response.new(
           client: @client,
           resource_class: resource_class,
-          response: @client.connection.send(method, path),
+          response: @client.connection.send(method, path, request_params, @headers),
         )
       else
         raise MissingParams, missing_params
