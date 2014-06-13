@@ -109,7 +109,7 @@ module Jsonism
     end
 
     def configured_to_ignore_request_params?
-      p !!@options[:ignore_request_params]
+      !!@options[:ignore_request_params]
     end
 
     class MissingParams < Error
