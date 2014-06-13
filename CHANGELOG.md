@@ -1,3 +1,6 @@
+## 0.0.4
+* Remove debug code
+
 ## 0.0.3
 * Fix request params & headers handling
 
